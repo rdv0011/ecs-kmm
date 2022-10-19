@@ -38,7 +38,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun BouncingBalls(bouncingBallsViewModel: BouncingBallsViewModel) {
     val drawingObjects by bouncingBallsViewModel.drawingObjects.collectAsState()
-    val timestamp by bouncingBallsViewModel.text.collectAsState()
 
     Column(
         Modifier.fillMaxSize(),
@@ -46,23 +45,24 @@ fun BouncingBalls(bouncingBallsViewModel: BouncingBallsViewModel) {
         verticalArrangement = Arrangement.Center
     ) {
         Column {
-            Text(timestamp)
+//            Text(timestamp)
             Row(
                 Modifier
                     .fillMaxWidth()
                     .height(100.dp)
             ) {
                 Canvas(modifier = Modifier.fillMaxSize()) {
-                    drawingObjects.forEach {
-                        when (it) {
+                    val iterator = drawingObjects.iterator()
+                    while(iterator.hasNext()){
+                        when (val item = iterator.next()) {
                             is DrawingObject.Circle ->
                                 drawCircle(
-                                    color = Color(it.color.red, it.color.green, it.color.blue),
+                                    color = Color(item.color.red, item.color.green, item.color.blue),
                                     center = Offset(
-                                        x = it.center.x.toFloat(),
-                                        y = it.center.y.toFloat()
+                                        x = item.center.x.toFloat(),
+                                        y = item.center.y.toFloat()
                                     ),
-                                    radius = it.radius.toFloat(),
+                                    radius = item.radius.toFloat(),
                                     style = Fill
                                 )
                             else -> Unit

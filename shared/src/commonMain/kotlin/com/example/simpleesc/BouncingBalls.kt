@@ -1,12 +1,9 @@
 package com.example.simpleesc
 
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class BouncingBalls(
     val width: Double,
@@ -14,9 +11,9 @@ class BouncingBalls(
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
     timestamp: Double,
 ): CoroutineScope by CoroutineScope(defaultDispatcher.limitedParallelism(1)) {
-    private val _drawingObjects = MutableStateFlow(emptyList<DrawingObject>())
-    private var drawingObjectsBaking = emptyList<DrawingObject>().toMutableList()
-    val drawingObjects: StateFlow<List<DrawingObject>> = _drawingObjects
+    private val _drawingObjects = MutableStateFlow(emptyArray<DrawingObject>())
+    private var drawingObjectsBaking = emptyArray<DrawingObject>()
+    val drawingObjects: StateFlow<Array<DrawingObject>> = _drawingObjects
 
     private val backend = HashMapBackend(UUIDGenerator)
     private val dynamicsSystem = DynamicsSystem(backend)
@@ -45,14 +42,18 @@ class BouncingBalls(
     private var lastTimeStamp = timestamp
     private var dt = 0.0
 
-    fun loop(timestamp: Double) {
+    fun startLoop() {
         launch {
-            drawingObjectsBaking.clear()
-            dt = (timestamp - lastTimeStamp)
-            lastTimeStamp = timestamp
-            dynamicsSystem.setElapsedTime(dt / 1000.0)
-            runner.invoke()
-            _drawingObjects.update { drawingObjectsBaking }
+            while(isActive) {
+                drawingObjectsBaking = emptyArray()
+                val timestamp = PlatformUtils.currentTimeMillis()
+                dt = (timestamp - lastTimeStamp)
+                lastTimeStamp = timestamp
+                dynamicsSystem.setElapsedTime(dt / 1000.0)
+                runner.invoke()
+                _drawingObjects.update { drawingObjectsBaking }
+                delay(33)
+            }
         }
     }
 }

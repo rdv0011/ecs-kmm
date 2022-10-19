@@ -3,30 +3,24 @@ package com.example.simpleesc.android
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.simpleesc.BouncingBalls
+import com.example.simpleesc.Color
 import com.example.simpleesc.DrawingObject
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
+import com.example.simpleesc.Vector2D
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class BouncingBallsViewModel : ViewModel() {
     private val bouncingBallsDriver = BouncingBalls(
-        width = 500.0,
+        width = 800.0,
         height = 1000.0,
         timestamp = System.currentTimeMillis().toDouble(),
     )
-    val drawingObjects: StateFlow<List<DrawingObject>> = bouncingBallsDriver.drawingObjects
-    val text = MutableStateFlow("")
+    val drawingObjects: StateFlow<Array<DrawingObject>> = bouncingBallsDriver.drawingObjects
 
     init {
         viewModelScope.launch {
-            while (isActive) {
-                bouncingBallsDriver.loop(System.currentTimeMillis().toDouble())
-                delay(100)
-                text.update { System.currentTimeMillis().toDouble().toString() }
-            }
+            bouncingBallsDriver.startLoop()
         }
     }
 }

@@ -44,11 +44,6 @@ override fun <C> get(id: Id, key: ComponentKey<C>)
 
 4) Thanks to KMM almost all code resides in a shared part which makes easier to maintain it
 
-5) Let's try to brake the example by replacing a container for objects being drawn.
-val drawingObjects: StateFlow<Array<DrawingObject>>
-	to 
-val drawingObjects: StateFlow<List<DrawingObject>>
- Which will brake rendering. Why is it happening? As a workaround we can define a simple text and update it from the same place where we are generating drawing objects.
-
+5) Let's try to brake the example by changing a container type for objects being drawn. Let's use MutableList and clear() function. Brnahc "reuse-list". As a workaround we can define a simple text and update it from the same place where we are generating drawing objects
 
 ![Sample on Android simulator](illustration/bubbles.gif)

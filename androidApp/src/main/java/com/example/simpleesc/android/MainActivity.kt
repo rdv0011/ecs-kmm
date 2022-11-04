@@ -67,7 +67,6 @@ fun BouncingBalls(bouncingBallsViewModel: BouncingBallsViewModel) {
                                 )
                             else -> Unit
                         }
-
                     }
                 }
             }

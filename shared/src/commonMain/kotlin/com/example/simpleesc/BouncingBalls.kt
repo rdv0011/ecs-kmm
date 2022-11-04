@@ -14,7 +14,7 @@ class BouncingBalls(
     timestamp: Double,
 ): CoroutineScope by CoroutineScope(defaultDispatcher.limitedParallelism(1)) {
     private val _drawingObjects: MutableStateFlow<DrawingObjectsContainer> = MutableStateFlow(emptyList())
-    private var drawingObjectsBaking: DrawingObjectsContainer = emptyList()
+    private var drawingObjectsBaking: MutableList<DrawingObject> = emptyList<DrawingObject>().toMutableList()
     val drawingObjects: StateFlow<DrawingObjectsContainer> = _drawingObjects
 
     private val backend = HashMapBackend(UUIDGenerator)
@@ -47,7 +47,7 @@ class BouncingBalls(
     fun startLoop() {
         launch {
             while(isActive) {
-                drawingObjectsBaking = emptyList()
+                drawingObjectsBaking.clear()
                 val timestamp = PlatformUtils.currentTimeMillis()
                 dt = (timestamp - lastTimeStamp)
                 lastTimeStamp = timestamp

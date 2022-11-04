@@ -43,6 +43,8 @@ class BouncingBalls(
     )
     private var lastTimeStamp = timestamp
     private var dt = 0.0
+    private val _testText: MutableStateFlow<String> = MutableStateFlow(lastTimeStamp.toString())
+    val testText: StateFlow<String> = _testText
 
     fun startLoop() {
         launch {
@@ -51,6 +53,7 @@ class BouncingBalls(
                 val timestamp = PlatformUtils.currentTimeMillis()
                 dt = (timestamp - lastTimeStamp)
                 lastTimeStamp = timestamp
+                _testText.update { lastTimeStamp.toString() }
                 dynamicsSystem.setElapsedTime(dt / 1000.0)
                 runner.invoke()
                 _drawingObjects.update { drawingObjectsBaking }

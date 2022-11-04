@@ -38,6 +38,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun BouncingBalls(bouncingBallsViewModel: BouncingBallsViewModel) {
     val drawingObjects by bouncingBallsViewModel.drawingObjects.collectAsState()
+    val timestamp by bouncingBallsViewModel.testText.collectAsState()
 
     Column(
         Modifier.fillMaxSize(),
@@ -45,7 +46,7 @@ fun BouncingBalls(bouncingBallsViewModel: BouncingBallsViewModel) {
         verticalArrangement = Arrangement.Center
     ) {
         Column {
-//            Text(timestamp)
+            Text(timestamp)
             Row(
                 Modifier
                     .fillMaxWidth()

@@ -13,6 +13,7 @@ class BouncingBallsViewModel : ViewModel() {
         timestamp = System.currentTimeMillis().toDouble(),
     )
     val drawingObjects: StateFlow<DrawingObjectsContainer> = bouncingBallsDriver.drawingObjects
+    val testText: StateFlow<String> = bouncingBallsDriver.testText
 
     init {
         viewModelScope.launch {

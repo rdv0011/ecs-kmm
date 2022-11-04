@@ -5,15 +5,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
+typealias DrawingObjectsContainer = List<DrawingObject>
+
 class BouncingBalls(
     val width: Double,
     val height: Double,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
     timestamp: Double,
 ): CoroutineScope by CoroutineScope(defaultDispatcher.limitedParallelism(1)) {
-    private val _drawingObjects = MutableStateFlow(emptyArray<DrawingObject>())
-    private var drawingObjectsBaking = emptyArray<DrawingObject>()
-    val drawingObjects: StateFlow<Array<DrawingObject>> = _drawingObjects
+    private val _drawingObjects: MutableStateFlow<DrawingObjectsContainer> = MutableStateFlow(emptyList())
+    private var drawingObjectsBaking: DrawingObjectsContainer = emptyList()
+    val drawingObjects: StateFlow<DrawingObjectsContainer> = _drawingObjects
 
     private val backend = HashMapBackend(UUIDGenerator)
     private val dynamicsSystem = DynamicsSystem(backend)
@@ -45,7 +47,7 @@ class BouncingBalls(
     fun startLoop() {
         launch {
             while(isActive) {
-                drawingObjectsBaking = emptyArray()
+                drawingObjectsBaking = emptyList()
                 val timestamp = PlatformUtils.currentTimeMillis()
                 dt = (timestamp - lastTimeStamp)
                 lastTimeStamp = timestamp
